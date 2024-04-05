@@ -1,0 +1,10 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+#audioPlayer{
+display: none;
+}
+#audioPlayer2{
+    display: none;
+    }
