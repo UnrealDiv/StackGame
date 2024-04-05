@@ -4,14 +4,14 @@ import { createCube } from './createCube.js';
 
 let gameStart = false;
 let stack = [];
-let cubeHeight = 10;
+let cubeHeight = 15;
 const originalBoxSize = 5;
 let speed = 0.3;
 function getRandomNumber(min, max) {
     return Math.random() * (max - min) + min;
   }
   let initialHue = getRandomNumber(0.0,1.0);
-  let initialSaturation = getRandomNumber(0.6,0.9);
+  let initialSaturation = getRandomNumber(0.6,0.7);
   let initialValue = getRandomNumber(0.3,0.6)
 let currentColour = {
     color:new THREE.Color().setHSL(initialHue,initialSaturation, initialValue)
@@ -42,7 +42,6 @@ function generateCube(x,y,z,width,depth){
         let nextValue = getRandomNumber(0.3,0.6);
      
       
-    console.log(currentColour.color);
     currentColour.color.setHSL(initialHue,initialSaturation,0.5)
     const mesh = new THREE.Mesh(cubeGeometry,cubeMaterial);
     mesh.position.set(x,y,z);
@@ -63,25 +62,110 @@ window.addEventListener("click",()=>{
             audioPlayer2.volume = 0.5;
         }
         
-        const topLayer = stack[stack.length-1];
+        let topLayer = stack[stack.length-1];
+        let previousLayer = stack[stack.length-2]
+       
+        let topWidth = topLayer.threejs.geometry.parameters.width;
+        let prevWidth = topLayer.threejs.geometry.parameters.width;
+        let topDepth = topLayer.threejs.geometry.parameters.depth;
+        let prevDepth = topLayer.threejs.geometry.parameters.depth;
+        let topPosX = topLayer.threejs.position.x;
+        let topPosZ = topLayer.threejs.position.z;
+        let prevPosX = previousLayer.threejs.position.x;
+        let prevPosZ = previousLayer.threejs.position.z;
+
+        let pLeftX = (prevPosX-prevWidth/2);
+        let pRightX = (prevPosX+prevWidth/2);
+
+        let tLeftX = (topPosX-topWidth/2);
+        let tRightX = (topPosX+topWidth/2);
+
+        let pFrontZ = (prevPosZ-prevDepth/2);
+        let pBackZ = (prevPosZ+prevDepth/2);
+
+        let tFrontZ = (topPosZ-topDepth/2);
+        let tBackZ = (topPosZ+topDepth/2);
+        
+        // console.log(prevPosX);
+
+        
+        
+
+
+        //Inbound Check
+        if(topLayer.direction ==='x'){
+            if((topPosX - topWidth/2) > (prevPosX +prevWidth/2) ){
+                console.log("out in right");
+            }else if((topPosX + topWidth/2) < (prevPosX -prevWidth/2)){
+                console.log("out in left");
+            }else{
+                
+                console.log(prevPosX);
+               
+                if(tLeftX+ (topWidth/2) >=(pRightX-(prevWidth/2))){
+                    let newWid = pRightX-tLeftX;
+                    const newGeometry = new THREE.BoxGeometry(newWid, cubeHeight, prevDepth);
+                    topLayer.threejs.geometry.dispose(); // Dispose the old geometry to release memory
+                    topLayer.threejs.geometry = newGeometry; // Replace the geometry of the mesh
+                    topLayer.threejs.position.x = tLeftX + newWid/2;
+                }else if(tLeftX+(topWidth/2) < pLeftX+(prevWidth/2)){
+                let newWid = Math.abs(pLeftX-tRightX);
+                 const newGeometry = new THREE.BoxGeometry(newWid, cubeHeight, prevDepth);
+                    topLayer.threejs.geometry.dispose(); // Dispose the old geometry to release memory
+                    topLayer.threejs.geometry = newGeometry; // Replace the geometry of the mesh
+                    topLayer.threejs.position.x = tRightX - newWid/2;
+                }
+            }    
+        }else  if(topLayer.direction ==='z'){
+            if((topPosZ - topDepth/2) > (prevPosZ +prevDepth/2) ){
+                console.log("out in right");
+            }else if((topPosZ + topDepth/2) < (prevPosZ -prevDepth/2)){
+                console.log("out in left");
+            }else{
+                
+                console.log(prevPosZ);
+               
+                if(tFrontZ+(topDepth/2) >=(pBackZ-(prevDepth/2))){
+                    console.log("bye");
+                    let newDep = pBackZ-tFrontZ;
+                    const newGeometry = new THREE.BoxGeometry(prevWidth, cubeHeight, newDep);
+                    topLayer.threejs.geometry.dispose(); // Dispose the old geometry to release memory
+                    topLayer.threejs.geometry = newGeometry; // Replace the geometry of the mesh
+                    topLayer.threejs.position.z = tFrontZ + newDep/2;
+                }else if(tFrontZ+(topDepth/2) < pFrontZ+(prevDepth/2)){
+                    console.log("hi");
+                let newDep = Math.abs(pFrontZ-tBackZ);
+                 const newGeometry = new THREE.BoxGeometry(prevWidth, cubeHeight, newDep);
+                    topLayer.threejs.geometry.dispose(); // Dispose the old geometry to release memory
+                    topLayer.threejs.geometry = newGeometry; // Replace the geometry of the mesh
+                    topLayer.threejs.position.z = tBackZ - newDep/2;
+                }
+            }    
+        }
+     
+
+        //
+
+
         const direction = topLayer.direction;
         //Next Layer's
         const nextX = direction === 'x'?0:-10;
         const nextZ = direction ==='z'?0:-10;
         const newWidth = originalBoxSize;
-        const newHeight = originalBoxSize;
+        const newDepth = originalBoxSize;
         const nextDirection = direction ==="x"?"z":"x";
-        addLayer(nextX,nextZ,newWidth,newHeight,nextDirection);
+        addLayer(nextX,nextZ,newWidth,newDepth,nextDirection);
         audioPlayer.volume = 1;
         audioPlayer.currentTime = 0;
         audioPlayer.play();
        
          
-})
+});
+
+
 
 
 function animation(){
-    
     let topLayer = stack[stack.length-1];
     if(topLayer.threejs.position[topLayer.direction] > 10){
         speed = speed *-1;
@@ -92,7 +176,7 @@ function animation(){
 
 
     if(camera.position.y < cubeHeight*(stack.length-2)+100){
-        camera.position.y +=1;
+        camera.position.y +=2;
     }
     renderer.render(scene,camera);
 }
