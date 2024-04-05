@@ -7,6 +7,16 @@ let stack = [];
 let cubeHeight = 10;
 const originalBoxSize = 5;
 let speed = 0.3;
+function getRandomNumber(min, max) {
+    return Math.random() * (max - min) + min;
+  }
+  let initialHue = getRandomNumber(0.0,1.0);
+  let initialSaturation = getRandomNumber(0.6,0.9);
+  let initialValue = getRandomNumber(0.3,0.6)
+let currentColour = {
+    color:new THREE.Color().setHSL(initialHue,initialSaturation, initialValue)
+}
+
 
 addLayer(0,0,originalBoxSize,originalBoxSize);
 addLayer(-10,0,originalBoxSize,originalBoxSize,"x");
@@ -19,12 +29,21 @@ function addLayer(x,z,width,depth,direction){
     const cube = generateCube(x,posY,z,width,depth)
     cube.direction =direction;
     stack.push(cube);
-    console.log(posY);
 }
 
 function generateCube(x,y,z,width,depth){
     const cubeGeometry = new THREE.BoxGeometry(width,cubeHeight,depth);
-    const cubeMaterial = new THREE.MeshLambertMaterial({color:0x00ff00});
+    const cubeMaterial = new THREE.MeshLambertMaterial({color:currentColour.color});
+   
+      
+      // Example usage:
+      initialHue = initialHue+0.03;
+      initialSaturation = initialSaturation+Math.random(0.05,0.09);
+        let nextValue = getRandomNumber(0.3,0.6);
+     
+      
+    console.log(currentColour.color);
+    currentColour.color.setHSL(initialHue,initialSaturation,0.5)
     const mesh = new THREE.Mesh(cubeGeometry,cubeMaterial);
     mesh.position.set(x,y,z);
     scene.add(mesh);
@@ -73,7 +92,6 @@ function animation(){
 
 
     if(camera.position.y < cubeHeight*(stack.length-2)+100){
-        console.log(camera.position.y,'cam');
         camera.position.y +=1;
     }
     renderer.render(scene,camera);
