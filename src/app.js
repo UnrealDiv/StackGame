@@ -90,26 +90,28 @@ window.addEventListener("click",()=>{
 
         
         
-
+        let newDep;
+        let newWid
 
         //Inbound Check
         if(topLayer.direction ==='x'){
             if((topPosX - topWidth/2) > (prevPosX +prevWidth/2) ){
-                console.log("out in right");
+                console.log("gameOver");
             }else if((topPosX + topWidth/2) < (prevPosX -prevWidth/2)){
-                console.log("out in left");
+                console.log("gameOver");
             }else{
                 
-                console.log(prevPosX);
                
                 if(tLeftX+ (topWidth/2) >=(pRightX-(prevWidth/2))){
-                    let newWid = pRightX-tLeftX;
+                   newWid = pRightX-tLeftX;
+                   newDep = pBackZ-tFrontZ;
                     const newGeometry = new THREE.BoxGeometry(newWid, cubeHeight, prevDepth);
                     topLayer.threejs.geometry.dispose(); // Dispose the old geometry to release memory
                     topLayer.threejs.geometry = newGeometry; // Replace the geometry of the mesh
                     topLayer.threejs.position.x = tLeftX + newWid/2;
                 }else if(tLeftX+(topWidth/2) < pLeftX+(prevWidth/2)){
-                let newWid = Math.abs(pLeftX-tRightX);
+                 newWid = Math.abs(pLeftX-tRightX);
+                 newDep = Math.abs(pFrontZ-tBackZ);
                  const newGeometry = new THREE.BoxGeometry(newWid, cubeHeight, prevDepth);
                     topLayer.threejs.geometry.dispose(); // Dispose the old geometry to release memory
                     topLayer.threejs.geometry = newGeometry; // Replace the geometry of the mesh
@@ -118,23 +120,24 @@ window.addEventListener("click",()=>{
             }    
         }else  if(topLayer.direction ==='z'){
             if((topPosZ - topDepth/2) > (prevPosZ +prevDepth/2) ){
-                console.log("out in right");
+                console.log("gameOver");
             }else if((topPosZ + topDepth/2) < (prevPosZ -prevDepth/2)){
-                console.log("out in left");
+                console.log("gameOver");
             }else{
                 
-                console.log(prevPosZ);
+        
                
                 if(tFrontZ+(topDepth/2) >=(pBackZ-(prevDepth/2))){
-                    console.log("bye");
-                    let newDep = pBackZ-tFrontZ;
+        
+                     newDep = pBackZ-tFrontZ;
+                     newWid = pRightX-tLeftX;
                     const newGeometry = new THREE.BoxGeometry(prevWidth, cubeHeight, newDep);
                     topLayer.threejs.geometry.dispose(); // Dispose the old geometry to release memory
                     topLayer.threejs.geometry = newGeometry; // Replace the geometry of the mesh
                     topLayer.threejs.position.z = tFrontZ + newDep/2;
                 }else if(tFrontZ+(topDepth/2) < pFrontZ+(prevDepth/2)){
-                    console.log("hi");
-                let newDep = Math.abs(pFrontZ-tBackZ);
+                newDep = Math.abs(pFrontZ-tBackZ);
+                newWid = Math.abs(pLeftX-tRightX);
                  const newGeometry = new THREE.BoxGeometry(prevWidth, cubeHeight, newDep);
                     topLayer.threejs.geometry.dispose(); // Dispose the old geometry to release memory
                     topLayer.threejs.geometry = newGeometry; // Replace the geometry of the mesh
@@ -149,12 +152,12 @@ window.addEventListener("click",()=>{
 
         const direction = topLayer.direction;
         //Next Layer's
-        const nextX = direction === 'x'?0:-10;
-        const nextZ = direction ==='z'?0:-10;
+        const nextX = direction === 'x'?topLayer.threejs.position.x:-10;
+        const nextZ = direction ==='z'?topLayer.threejs.position.z:-10;
         const newWidth = originalBoxSize;
         const newDepth = originalBoxSize;
         const nextDirection = direction ==="x"?"z":"x";
-        addLayer(nextX,nextZ,newWidth,newDepth,nextDirection);
+        addLayer(nextX,nextZ,newWid,newDep,nextDirection);
         audioPlayer.volume = 1;
         audioPlayer.currentTime = 0;
         audioPlayer.play();

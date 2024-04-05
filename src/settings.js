@@ -30,7 +30,7 @@ renderer.render(scene,camera);
 
 
 scene.add(camera);
-camera.position.set(0,100,0);
+camera.position.set(10,100,10);
 camera.lookAt(0,0,0);
 
 //Light
