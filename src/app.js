@@ -23,7 +23,7 @@ addLayer(-distance,0,originalBoxSize,originalBoxSize,"x");
 
 function updateMobileCamera() {
     const aspectRatio = window.innerWidth / window.innerHeight;
-    const cameraSize = 40; // Adjust camera size as needed
+    const cameraSize = 20; // Adjust camera size as needed
 
     // Calculate new camera dimensions based on aspect ratio
     let cameraWidth, cameraHeight;

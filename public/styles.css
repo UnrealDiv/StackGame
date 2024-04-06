@@ -19,19 +19,30 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    background-color: #000000;
+    background: radial-gradient(circle, #fcff38, #d0ff00);
     overflow: hidden !important;
 }
 @media only screen and (max-width: 768px) {
+    body{
+        overflow: hidden;
+    }
     .draw {
         width: 100vw !important;
         height: 100vh !important;
+        overflow: hidden;
     }
     .score {
         font-size: 30px !important; 
         top: 50px !important; 
         left: 50% !important; 
         transform: translateX(-50%) !important; 
+    }
+    .cont{
+        height: 50px !important;
+        width: 50px !important;
+        font-size: 10px !important;
+        top: 5px;
+        left:50%
     }
 }
 
@@ -44,4 +55,13 @@ body {
     left: 50%;
     font-family: "Bungee Spice", sans-serif;
     font-size: 64px;
+}
+.popUp{
+    z-index: 200;
+    font-family: "Denk One", sans-serif;
+    position: absolute;
+    font-size: 16px;
+    color: rgb(68, 0, 255);
+    top: 5px;
+    left:90%
 }
