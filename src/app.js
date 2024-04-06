@@ -208,7 +208,6 @@ function disposeStack() {
         mesh.geometry.dispose(); // Dispose of the mesh's geometry
         mesh.material.dispose(); // Dispose of the mesh's material
     }
-    console.log('hi');
     stack = []; // Clear the stack array
 }
 
@@ -238,9 +237,6 @@ function animation(){
         }
         
         disposeStack();
-    
-      
-            
         renderer.setAnimationLoop(null);
     }
 
