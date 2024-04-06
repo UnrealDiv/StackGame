@@ -235,10 +235,11 @@ function animation(){
             audioPlayer.pause();
             audioPlayer2.pause();
         }
+        scoreDisplay.innerText = `Game Over : ${stack.length-3}`;
         disposeStack();
     
       
-            scoreDisplay.innerText = `Game Over : ${stack.length-3}`;
+            
         renderer.setAnimationLoop(null);
     }
 
