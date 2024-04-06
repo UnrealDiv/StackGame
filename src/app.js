@@ -201,6 +201,16 @@ window.addEventListener("click",()=>{
         }
 });
 
+function disposeStack() {
+    for (let i = 0; i < stack.length; i++) {
+        const mesh = stack[i].threejs;
+        scene.remove(mesh); // Remove the mesh from the scene
+        mesh.geometry.dispose(); // Dispose of the mesh's geometry
+        mesh.material.dispose(); // Dispose of the mesh's material
+    }
+    console.log('hi');
+    stack = []; // Clear the stack array
+}
 
 
 
@@ -225,7 +235,7 @@ function animation(){
             audioPlayer.pause();
             audioPlayer2.pause();
         }
-
+        disposeStack();
     
       
             scoreDisplay.innerText = `Game Over : ${stack.length-3}`;
