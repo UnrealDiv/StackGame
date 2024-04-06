@@ -2,22 +2,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="./public/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Bungee+Spice&display=swap" rel="stylesheet">
     <title>Document</title>
 </head>
 <body>
   <h1 class="score"></h1>
   <audio id="audioPlayer3" controls>
-    <source src="gameOver.wav" type="audio/wav">
+    <source src="./public/gameOver.wav" type="audio/wav">
   </audio>
     <audio id="audioPlayer" controls>
-        <source src="woodChop.wav" type="audio/wav">
+        <source src="./public/woodChop.wav" type="audio/wav">
       </audio>
       <audio id="audioPlayer2" controls>
-        <source src="bgMusic.mp3" type="audio/mpeg">
+        <source src="./public/bgMusic.mp3" type="audio/mpeg">
       </audio>
     <canvas class="draw"></canvas>
-    <script src="./bundle.js"></script>
+    <script src="./dist/bundle.js"></script>
 </body>
 </html>

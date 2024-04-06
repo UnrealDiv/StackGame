@@ -63,7 +63,7 @@ window.addEventListener("click",()=>{
             gameStart=true;
             audioPlayer2.play();
             audioPlayer2.loop = true;
-            audioPlayer2.volume = 0.3;
+            audioPlayer2.volume = 0.6;
         }
         
         let topLayer = stack[stack.length-1];
@@ -106,8 +106,6 @@ window.addEventListener("click",()=>{
             }else if((topPosX + topWidth/2) < (prevPosX -prevWidth/2)){
                 gameOver = true;
             }else{
-                
-               
                 if(tLeftX+ (topWidth/2) >=(pRightX-(prevWidth/2))){
                    newWid = pRightX-tLeftX;
                    newDep = pBackZ-tFrontZ;
@@ -130,11 +128,7 @@ window.addEventListener("click",()=>{
             }else if((topPosZ + topDepth/2) < (prevPosZ -prevDepth/2)){
                 gameOver = true;
             }else{
-                
-        
-               
                 if(tFrontZ+(topDepth/2) >=(pBackZ-(prevDepth/2))){
-        
                      newDep = pBackZ-tFrontZ;
                      newWid = pRightX-tLeftX;
                     const newGeometry = new THREE.BoxGeometry(prevWidth, cubeHeight, newDep);
@@ -151,11 +145,6 @@ window.addEventListener("click",()=>{
                 }
             }    
         }
-     
-
-        //
-
-
         const direction = topLayer.direction;
         //Next Layer's
         const nextX = direction === 'x'?topLayer.threejs.position.x:-distance;
@@ -170,9 +159,6 @@ window.addEventListener("click",()=>{
             audioPlayer3.volume =1;
             audioPlayer3.play();
         }
-     
-       
-         
 });
 
 
@@ -180,6 +166,7 @@ window.addEventListener("click",()=>{
 
 function animation(){
 
+    
     if(!gameOver){
         let topLayer = stack[stack.length-1];
         if(topLayer.threejs.position[topLayer.direction] > distance){
@@ -188,17 +175,16 @@ function animation(){
             speed = speed*-1;
         }
         topLayer.threejs.position[topLayer.direction] += speed;
-    
-    
         if(camera.position.y < cubeHeight*(stack.length-2)+100){
             camera.position.y +=2;
         }
         renderer.render(scene,camera);
     }else{
-        if(stack.length-3 >0){
+        if(stack.length-2 >0){
             audioPlayer.pause();
             audioPlayer2.pause();
         }
+
     
       
             scoreDisplay.innerText = `Game Over : ${stack.length-3}`;
