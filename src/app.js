@@ -231,14 +231,16 @@ function animation(){
         }
         renderer.render(scene,camera);
     }else{
+        scoreDisplay.innerText = `Game Over : ${stack.length-3}`;
         if(stack.length-2 >0){
             audioPlayer.pause();
             audioPlayer2.pause();
         }
+        
         disposeStack();
     
       
-            scoreDisplay.innerText = `Game Over : ${stack.length-3}`;
+            
         renderer.setAnimationLoop(null);
     }
 
