@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import * as dat from 'dat.gui';
 
 
 const aspect = {
@@ -12,20 +11,11 @@ const scene = new THREE.Scene();
 const camera = new THREE.OrthographicCamera(-30,30,30,-30,0.01,2000);
 
 const canvas = document.querySelector(".draw");
-const renderer = new THREE.WebGLRenderer({canvas,antialias:true});
+const renderer = new THREE.WebGLRenderer({canvas,antialias:true,alpha:true});
 renderer.setSize(aspect.width,aspect.height);
 
-const gui = new dat.GUI();
 //Resize
-window.addEventListener("resize",()=>{
-    aspect.width = window.innerWidth;
-    aspect.height = window.innerHeight;
 
-    camera.aspect = aspect.width/aspect.height;
-    camera.updateProjectionMatrix();
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-    renderer.setSize(aspect.width,aspect.height);
-});
 renderer.render(scene,camera);
 
 
@@ -43,4 +33,4 @@ scene.add(directionalLight);
 directionalLight.position.set(-10,50,0);
 
 
-export {scene,renderer,camera,aspect , gui};
+export {scene,renderer,camera,aspect};

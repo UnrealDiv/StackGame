@@ -11,12 +11,36 @@ display: none;
 #audioPlayer3{
     display: none;
 }
+body {
+    width: 100vw; 
+    height: 100vh; 
+}
+.draw{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: #000000;
+}
+@media only screen and (max-width: 768px) {
+    .draw {
+        width: 100vw !important;
+        height: 100vh !important;
+    }
+    .score {
+        font-size: 30px !important; 
+        top: 50px !important; 
+        left: 50% !important; 
+        transform: translateX(-50%) !important; 
+    }
+}
+
 
 .score{
+    z-index: 100;
     transform: translate(-50%,0);
     position: absolute;
     top: 10;
     left: 50%;
     font-family: "Bungee Spice", sans-serif;
-    font-size: 64;
+    font-size: 64px;
 }

@@ -1,6 +1,5 @@
 import * as THREE from 'three';
-import {scene,renderer,camera,aspect,gui} from "./settings.js";
-import { createCube } from './createCube.js';
+import {scene,renderer,camera,aspect} from "./settings.js";
 
 let gameStart = false;
 let stack = [];
@@ -22,6 +21,37 @@ let distance = 20;
 addLayer(0,0,originalBoxSize,originalBoxSize);
 addLayer(-distance,0,originalBoxSize,originalBoxSize,"x");
 
+function updateMobileCamera() {
+    const aspectRatio = window.innerWidth / window.innerHeight;
+    const cameraSize = 40; // Adjust camera size as needed
+
+    // Calculate new camera dimensions based on aspect ratio
+    let cameraWidth, cameraHeight;
+    if (aspectRatio > 1) {
+        cameraWidth = cameraSize * aspectRatio;
+        cameraHeight = cameraSize;
+    } else {
+        cameraWidth = cameraSize;
+        cameraHeight = cameraSize / aspectRatio;
+    }
+
+    // Set orthographic camera parameters
+    camera.left = -cameraWidth / 2;
+    camera.right = cameraWidth / 2;
+    camera.top = cameraHeight / 2;
+    camera.bottom = -cameraHeight / 2;
+    camera.updateProjectionMatrix();
+}
+window.addEventListener("resize",()=>{
+  
+    aspect.width = window.innerWidth;
+    aspect.height = window.innerHeight;
+
+    camera.aspect = aspect.width/aspect.height;
+    camera.updateProjectionMatrix();
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.setSize(aspect.width,aspect.height);
+});
 renderer.render(scene, camera);
 renderer.setAnimationLoop(animation);
 // window.addEventListener("click",addLayer);
@@ -52,6 +82,12 @@ function generateCube(x,y,z,width,depth){
         width,
         depth
     }
+}
+
+function gameRestart(){
+    window.setTimeout(()=>{
+        location.reload();
+    },1000)
 }
 
 let scoreDisplay = document.querySelector(".score");
@@ -103,8 +139,10 @@ window.addEventListener("click",()=>{
         if(topLayer.direction ==='x'){
             if((topPosX - topWidth/2) > (prevPosX +prevWidth/2) ){
                 gameOver = true;
+                gameRestart()
             }else if((topPosX + topWidth/2) < (prevPosX -prevWidth/2)){
                 gameOver = true;
+                gameRestart()
             }else{
                 if(tLeftX+ (topWidth/2) >=(pRightX-(prevWidth/2))){
                    newWid = pRightX-tLeftX;
@@ -125,8 +163,10 @@ window.addEventListener("click",()=>{
         }else  if(topLayer.direction ==='z'){
             if((topPosZ - topDepth/2) > (prevPosZ +prevDepth/2) ){
                 gameOver = true;
+                gameRestart()
             }else if((topPosZ + topDepth/2) < (prevPosZ -prevDepth/2)){
                 gameOver = true;
+                gameRestart()
             }else{
                 if(tFrontZ+(topDepth/2) >=(pBackZ-(prevDepth/2))){
                      newDep = pBackZ-tFrontZ;
@@ -165,8 +205,9 @@ window.addEventListener("click",()=>{
 
 
 function animation(){
-
-    
+    if (window.innerWidth <= 768) {
+        updateMobileCamera();
+    }
     if(!gameOver){
         let topLayer = stack[stack.length-1];
         if(topLayer.threejs.position[topLayer.direction] > distance){
