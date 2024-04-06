@@ -9,7 +9,7 @@ const aspect = {
 //Scene
 const scene = new THREE.Scene();
 
-const camera = new THREE.OrthographicCamera(-20,20,20,-20,0.01,2000);
+const camera = new THREE.OrthographicCamera(-30,30,30,-30,0.01,2000);
 
 const canvas = document.querySelector(".draw");
 const renderer = new THREE.WebGLRenderer({canvas,antialias:true});

@@ -7,4 +7,16 @@ display: none;
 }
 #audioPlayer2{
     display: none;
-    }
+}
+#audioPlayer3{
+    display: none;
+}
+
+.score{
+    transform: translate(-50%,0);
+    position: absolute;
+    top: 10;
+    left: 50%;
+    font-family: "Bungee Spice", sans-serif;
+    font-size: 64;
+}

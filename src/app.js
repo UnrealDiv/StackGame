@@ -5,8 +5,8 @@ import { createCube } from './createCube.js';
 let gameStart = false;
 let stack = [];
 let cubeHeight = 15;
-const originalBoxSize = 5;
-let speed = 0.3;
+const originalBoxSize = 10;
+let speed = 0.6;
 function getRandomNumber(min, max) {
     return Math.random() * (max - min) + min;
   }
@@ -17,15 +17,16 @@ let currentColour = {
     color:new THREE.Color().setHSL(initialHue,initialSaturation, initialValue)
 }
 
-
+let gameOver = false;
+let distance = 20;
 addLayer(0,0,originalBoxSize,originalBoxSize);
-addLayer(-10,0,originalBoxSize,originalBoxSize,"x");
+addLayer(-distance,0,originalBoxSize,originalBoxSize,"x");
 
 renderer.render(scene, camera);
 renderer.setAnimationLoop(animation);
 // window.addEventListener("click",addLayer);
 function addLayer(x,z,width,depth,direction){
-    let posY = cubeHeight*stack.length;
+    let posY = (cubeHeight*stack.length)-20;
     const cube = generateCube(x,posY,z,width,depth)
     cube.direction =direction;
     stack.push(cube);
@@ -52,14 +53,17 @@ function generateCube(x,y,z,width,depth){
         depth
     }
 }
+
+let scoreDisplay = document.querySelector(".score");
 const audioPlayer = document.getElementById('audioPlayer');
 const audioPlayer2 = document.getElementById('audioPlayer2');
+const audioPlayer3 = document.getElementById('audioPlayer3');
 window.addEventListener("click",()=>{
         if(!gameStart){
             gameStart=true;
             audioPlayer2.play();
             audioPlayer2.loop = true;
-            audioPlayer2.volume = 0.5;
+            audioPlayer2.volume = 0.3;
         }
         
         let topLayer = stack[stack.length-1];
@@ -87,18 +91,20 @@ window.addEventListener("click",()=>{
         let tBackZ = (topPosZ+topDepth/2);
         
         // console.log(prevPosX);
-
+        if(!gameOver){
+            scoreDisplay.innerText = `${stack.length-1}`;
+        }
         
         
         let newDep;
-        let newWid
+        let newWid;
 
         //Inbound Check
         if(topLayer.direction ==='x'){
             if((topPosX - topWidth/2) > (prevPosX +prevWidth/2) ){
-                console.log("gameOver");
+                gameOver = true;
             }else if((topPosX + topWidth/2) < (prevPosX -prevWidth/2)){
-                console.log("gameOver");
+                gameOver = true;
             }else{
                 
                
@@ -120,9 +126,9 @@ window.addEventListener("click",()=>{
             }    
         }else  if(topLayer.direction ==='z'){
             if((topPosZ - topDepth/2) > (prevPosZ +prevDepth/2) ){
-                console.log("gameOver");
+                gameOver = true;
             }else if((topPosZ + topDepth/2) < (prevPosZ -prevDepth/2)){
-                console.log("gameOver");
+                gameOver = true;
             }else{
                 
         
@@ -152,15 +158,19 @@ window.addEventListener("click",()=>{
 
         const direction = topLayer.direction;
         //Next Layer's
-        const nextX = direction === 'x'?topLayer.threejs.position.x:-10;
-        const nextZ = direction ==='z'?topLayer.threejs.position.z:-10;
-        const newWidth = originalBoxSize;
-        const newDepth = originalBoxSize;
+        const nextX = direction === 'x'?topLayer.threejs.position.x:-distance;
+        const nextZ = direction ==='z'?topLayer.threejs.position.z:-distance;
         const nextDirection = direction ==="x"?"z":"x";
         addLayer(nextX,nextZ,newWid,newDep,nextDirection);
-        audioPlayer.volume = 1;
-        audioPlayer.currentTime = 0;
-        audioPlayer.play();
+        if(!gameOver){
+            audioPlayer.volume = 1.0;
+            audioPlayer.currentTime = 0;
+            audioPlayer.play();
+        }else if(gameOver){
+            audioPlayer3.volume =1;
+            audioPlayer3.play();
+        }
+     
        
          
 });
@@ -169,18 +179,32 @@ window.addEventListener("click",()=>{
 
 
 function animation(){
-    let topLayer = stack[stack.length-1];
-    if(topLayer.threejs.position[topLayer.direction] > 10){
-        speed = speed *-1;
-    }else if(topLayer.threejs.position[topLayer.direction] < -10){
-        speed = speed*-1;
-    }
-    topLayer.threejs.position[topLayer.direction] += speed;
 
-
-    if(camera.position.y < cubeHeight*(stack.length-2)+100){
-        camera.position.y +=2;
+    if(!gameOver){
+        let topLayer = stack[stack.length-1];
+        if(topLayer.threejs.position[topLayer.direction] > distance){
+            speed = speed *-1;
+        }else if(topLayer.threejs.position[topLayer.direction] < -distance){
+            speed = speed*-1;
+        }
+        topLayer.threejs.position[topLayer.direction] += speed;
+    
+    
+        if(camera.position.y < cubeHeight*(stack.length-2)+100){
+            camera.position.y +=2;
+        }
+        renderer.render(scene,camera);
+    }else{
+        if(stack.length-3 >0){
+            audioPlayer.pause();
+            audioPlayer2.pause();
+        }
+    
+      
+            scoreDisplay.innerText = `Game Over : ${stack.length-3}`;
+        renderer.setAnimationLoop(null);
     }
-    renderer.render(scene,camera);
+
+   
 }
 
