@@ -19,7 +19,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    background: radial-gradient(circle, #d1ff38, #d0ff00);
+    background: radial-gradient(circle, #afeb0a95, #0a8bdcf3);
     overflow: hidden !important;
 }
 @media only screen and (max-width: 768px) {
