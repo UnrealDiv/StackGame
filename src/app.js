@@ -239,7 +239,5 @@ function animation(){
         disposeStack();
         renderer.setAnimationLoop(null);
     }
-
-   
 }
 
